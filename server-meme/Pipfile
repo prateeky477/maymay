@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+python-multipart = "*"
+itsdangerous = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pymongo = {extras = ["srv"], version = "*"}
+bcrypt = "*"
+aiohttp = "*"
+boto3 = "*"
+python-dotenv = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
