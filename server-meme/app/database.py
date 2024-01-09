@@ -1,4 +1,3 @@
-from fastapi import APIRouter, HTTPException,File,UploadFile
 from pymongo import MongoClient
 from .settings import config
 client = MongoClient(config["MONGO_URI"])
