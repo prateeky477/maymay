@@ -53,7 +53,6 @@ app.add_middleware(
     same_site="lax",
     max_age=24 * 60 * 60, 
     domain=react_url,
-    secure=True 
 )
 
 
