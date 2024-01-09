@@ -1,15 +1,42 @@
 from fastapi import FastAPI, HTTPException, Request, Depends,File,UploadFile,Form
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from .model import User
-from .database import collection,template,saved
 import bcrypt
 from datetime import datetime, timezone, timedelta
 from fastapi.responses import JSONResponse
 import uuid
-from .s3 import s3,s3_bucket_name,secret_key,react_url
+from pymongo import MongoClient
+from datetime import datetime
+from typing import List
+from pydantic import BaseModel
+from typing import Optional
+import boto3
+import os
+from dotenv import load_dotenv
 
 app = FastAPI()
+
+
+
+load_dotenv()
+
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client["memedb"]
+# print(db)
+collection = db["user"]
+template=db["template"]
+saved=db["saved"]
+
+
+s3=boto3.client("s3", aws_access_key_id=os.getenv("AWS_ACESS_KEY"), aws_secret_access_key=os.getenv("AWS_SECRET_KEY"), region_name=os.getenv("REGION_NAME"))
+s3_bucket_name=os.getenv("S3_BUCKET_NAME")
+secret_key=os.getenv("SECRET_KEY")
+react_url=os.getenv("REACT_APP_URL")
+
+class User(BaseModel):
+    username: str
+    password: str
+    session_id: Optional[str] = None  
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +55,6 @@ app.add_middleware(
     domain=react_url,
     secure=True 
 )
-
 
 
 def generate_session_id():
