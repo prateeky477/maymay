@@ -1,0 +1,9 @@
+fastapi==*
+python-multipart==*
+itsdangerous==*
+uvicorn==*
+pymongo==*
+bcrypt==*
+aiohttp==*
+boto3==*
+python-dotenv==*
