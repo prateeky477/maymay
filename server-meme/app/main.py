@@ -50,9 +50,10 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=secret_key,
     session_cookie="session_cookie",
-    same_site="lax",
+    same_site="None",
     max_age=24 * 60 * 60, 
     domain="fastapi-meme.onrender.com",
+    secure=True,
 )
 
 
