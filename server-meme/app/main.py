@@ -40,7 +40,7 @@ class User(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[react_url],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +52,7 @@ app.add_middleware(
     session_cookie="session_cookie",
     same_site="lax",
     max_age=24 * 60 * 60, 
-    domain="meme-generator-tawny-five.vercel.app",
+    domain=".vercel.app",
 )
 
 
