@@ -52,7 +52,7 @@ app.add_middleware(
     session_cookie="session_cookie",
     same_site="lax",
     max_age=24 * 60 * 60, 
-    domain="meme-generator-k5nd.vercel.app",
+    domain="meme-generator-tawny-five.vercel.app",
 )
 
 
