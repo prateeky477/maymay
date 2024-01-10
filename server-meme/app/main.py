@@ -53,7 +53,6 @@ app.add_middleware(
     same_site="None",
     max_age=24 * 60 * 60, 
     domain="fastapi-meme.onrender.com",
-    secure=True,
 )
 
 
