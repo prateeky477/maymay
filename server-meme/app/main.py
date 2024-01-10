@@ -28,10 +28,14 @@ template=db["template"]
 saved=db["saved"]
 
 
-s3=boto3.client("s3", aws_access_key_id=os.getenv("AWS_ACESS_KEY"), aws_secret_access_key=os.getenv("AWS_SECRET_KEY"), region_name=os.getenv("REGION_NAME"))
-s3_bucket_name=os.getenv("S3_BUCKET_NAME")
-secret_key=os.getenv("SECRET_KEY")
-react_url=os.getenv("REACT_APP_URL")
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+    region_name=os.getenv("REGION_NAME")
+)
+s3_bucket_name = os.getenv("S3_BUCKET_NAME")
+secret_key = os.getenv("SECRET_KEY")
 
 class User(BaseModel):
     username: str
