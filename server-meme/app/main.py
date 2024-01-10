@@ -46,14 +46,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.add_middleware(
     SessionMiddleware,
     secret_key=secret_key,
     session_cookie="session_cookie",
-    same_site="Strict",
+    same_site=None,  # Allow cross-site
     max_age=24 * 60 * 60, 
     domain="fastapi-meme.onrender.com",
+    secure=True,  # Require HTTPS
 )
+
 
 
 def generate_session_id():
