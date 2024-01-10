@@ -40,7 +40,7 @@ class User(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://meme-generator-tawny-five.vercel.app/","http://localhost:5173/"],
+    allow_origins=["https://meme-generator-tawny-five.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +52,7 @@ app.add_middleware(
     session_cookie="session_cookie",
     same_site="Strict",
     max_age=24 * 60 * 60, 
-    domain="fastapi-meme.onrender.com",
+    domain="meme-generator-tawny-five.vercel.app",
 )
 
 
