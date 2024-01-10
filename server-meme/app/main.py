@@ -52,7 +52,7 @@ app.add_middleware(
     session_cookie="session_cookie",
     same_site="lax",
     max_age=24 * 60 * 60, 
-    domain=".vercel.app",
+    domain="fastapi-meme.onrender.com",
 )
 
 
