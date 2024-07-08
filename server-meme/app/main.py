@@ -28,12 +28,14 @@ template=db["template"]
 saved=db["saved"]
 
 
+
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+    aws_access_key_id=os.getenv("AWS_ACESS_KEY"),
     aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
     region_name=os.getenv("REGION_NAME")
 )
+
 s3_bucket_name = os.getenv("S3_BUCKET_NAME")
 secret_key = os.getenv("SECRET_KEY")
 
@@ -44,7 +46,7 @@ class User(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://meme-generator-tawny-five.vercel.app","https://meme-generator-tawny-five.vercel.app/"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,7 +59,7 @@ app.add_middleware(
     session_cookie="session_cookie",
     same_site="lax",  # Allow cross-site
     max_age=24 * 60 * 60, 
-    domain="fastapi-meme.onrender.com",
+    # domain="localhost",
 )
 
 
@@ -66,6 +68,7 @@ def generate_session_id():
     return str(uuid.uuid4())
 
 def get_current_user(request: Request):
+    print(request.session)
     session = request.session
     user = session.get("user")
     if user is None:
@@ -110,7 +113,9 @@ async def login(user_data: User, request: Request):
                 collection.update_one({"username": user_data.username}, {"$set": {"session_id": session_id}})
 
             # Update the session with the user data
+            
             request.session.update({"user": user_data.username, "session_id": session_id})
+            print(request.session)
 
             return {"data": user_data.username}
         else:
@@ -216,6 +221,9 @@ async def save_image(
     image_id = str(uuid.uuid4())
     try:
         if current_user:
+            # Replace spaces in filename with underscores
+            filename = image.filename.replace(" ", "_")
+            
             image_content = await image.read()
             user_saved_collection = saved.find_one({"username": current_user})
 
@@ -223,7 +231,7 @@ async def save_image(
                 user_saved_collection = {"username": current_user, "images": []}
             
             # Add the new image data to the saved collection
-            s3_object_key = f"images/{image_id}/{image.filename}"
+            s3_object_key = f"images/{image_id}/{filename}"
 
             # Seek to the beginning of the file
             image.file.seek(0)
@@ -239,8 +247,8 @@ async def save_image(
             s3_url = f"https://{s3_bucket_name}.s3.amazonaws.com/{s3_object_key}"
             
             new_image_data = {
-                "image_id":image_id,
-                "filename": image.filename,
+                "image_id": image_id,
+                "filename": filename,
                 "content_type": image.content_type,
                 "image": s3_url,
                 "timestamp": datetime.now(timezone.utc)
@@ -262,7 +270,6 @@ async def save_image(
     except Exception as e:
         print("Save Image Error:", e)
         raise HTTPException(status_code=500, detail="Internal Server Error")
-    
 
 @app.get("/saved")
 async def get_saved_images(current_user: str = Depends(get_current_user)):
@@ -333,8 +340,3 @@ async def delete_image(image_id: str, current_user: str = Depends(get_current_us
 
     else:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
-
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app.main, host="0.0.0.0", port=8000)
